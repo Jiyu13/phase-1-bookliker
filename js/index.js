@@ -27,7 +27,11 @@ document.addEventListener("DOMContentLoaded", (event) => {
             eachUser.textContent = users[index]["username"]
             usersContainer.append(eachUser)
         })
-        showPanel.append(img, title, subtitle, author, description,  usersContainer)
+
+        const likeBtn = event.target.createElement("button")
+        likeBtn.innerHTML = "LIKE"
+
+        showPanel.append(img, title, subtitle, author, description,  usersContainer, likeBtn)
         
     }
 
