@@ -22,14 +22,42 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
         const users = book["users"]
         const usersContainer = document.createElement("ul")
-        users.forEach((user, index) => {
+        users.forEach(user => {
             const eachUser = document.createElement("li")
-            eachUser.textContent = users[index]["username"]
+            eachUser.textContent = user["username"]
             usersContainer.append(eachUser)
         })
-
+        
         const likeBtn = event.target.createElement("button")
         likeBtn.innerHTML = "LIKE"
+        likeBtn.addEventListener("click", () => {
+
+            // show new username in DOM
+            const newUser = {"id": 10, "username": "macejkovic"}
+            const newli = document.createElement("li")
+            newli.textContent = newUser["username"]
+            usersContainer.append(newli)
+
+
+            if (likeBtn.innerHTML === "LIKE") {
+                likeBtn.innerHTML = "UNLIKE"
+
+                
+                users.push(newUser)
+                fetch(`http://localhost:3000/books/${book.id}`, {
+                    method: "PATCH",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({
+                        "users": users
+                    })
+                })
+                .then(response => response.json())
+                .then(book => console.log(book))
+
+            } 
+        })
+
+        
 
         showPanel.append(img, title, subtitle, author, description,  usersContainer, likeBtn)
         
