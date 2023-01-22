@@ -20,6 +20,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         const description = document.createElement("p")
         description.textContent = book["description"]
 
+        
         const users = book["users"]
         const usersContainer = document.createElement("ul")
         users.forEach(user => {
@@ -35,14 +36,14 @@ document.addEventListener("DOMContentLoaded", (event) => {
             // show new username in DOM
             const newUser = {"id": 10, "username": "macejkovic"}
             const newli = document.createElement("li")
-            newli.textContent = newUser["username"]
-            usersContainer.append(newli)
 
 
             if (likeBtn.innerHTML === "LIKE") {
+                newli.textContent = newUser["username"]
+                usersContainer.append(newli)
+                
                 likeBtn.innerHTML = "UNLIKE"
 
-                
                 users.push(newUser)
                 fetch(`http://localhost:3000/books/${book.id}`, {
                     method: "PATCH",
@@ -52,12 +53,25 @@ document.addEventListener("DOMContentLoaded", (event) => {
                     })
                 })
                 .then(response => response.json())
+                .then(newUser => console.log(newUser))
+            
+            } else if (likeBtn.innerHTML === "UNLIKE") {
+                likeBtn.innerHTML = "LIKE"
+                usersContainer.lastChild.remove()
+
+                users.pop()
+                
+                fetch(`http://localhost:3000/books/${book.id}`, {
+                    method: "PATCH",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({
+                        "users": users
+                    })
+                })
+                .then(response => response.json())
                 .then(book => console.log(book))
-
-            } 
+            }
         })
-
-        
 
         showPanel.append(img, title, subtitle, author, description,  usersContainer, likeBtn)
         
